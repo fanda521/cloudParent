@@ -1,0 +1,5 @@
+1.consul的启动方式
+consul agent -dev -ui -node=cy
+-dev开发服务器模式启动，-node结点名为cy，-ui可以用界面访问，默认能访问
+2.访问地址：http://localhost:8500
+3.先启动consul在启动注册到consul的服务

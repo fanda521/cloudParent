@@ -1,0 +1,75 @@
+#spring cloud config 3344
+
+#依赖
+    <!--config-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-config-server</artifactId>
+    </dependency>
+#config 配置
+spring:
+  application:
+    name: cloud-config-center
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/spring_cloud_test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 331224
+  #配置config
+  cloud:
+    #server 配置
+    config:
+      server:
+        git:
+          uri: https://github.com/fanda521/spring-cloud-config-study.git #自己github仓库的地址
+          search-paths:
+            - springcloud-config
+          #uri: git@github:com:fanda521/spring-cloud-config-study.git
+      label: master #仓库的分支名
+
+
+#路径的格式
+官网：
+/{application}/{profile}[/{label}]
+/{application}-{profile}.yml
+/{label}/{application}-{profile}.yml
+/{application}-{profile}.properties
+/{label}/{application}-{profile}.properties
+
+#3355 config client配置
+依赖
+        <!--config client-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+
+spring:
+  application:
+    name: cloud-config-client
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/spring_cloud_test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 331224
+  #配置config
+  cloud:
+    #config 客户端的配置
+    config:
+      label: master #分支名
+      name: config #配置文件名称
+      profile: dev #读取的后缀名
+      uri: http://localhost:3344 #配置中心地址 http://localhost:3344/master/config-prod.yml
+3355 动态刷新
+     pom引入actuator
+     暴露监控端点
+     给controller加上注解@RefreshScope
+     执行一下：curl -X POST "http://localhost:3355/actuator/refresh"
+
+
+
+
+

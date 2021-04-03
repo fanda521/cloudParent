@@ -1,0 +1,8 @@
+server:
+  port: 8007
+
+
+
+spring:
+  application:
+    name: cloud-consumer-consul-order8007

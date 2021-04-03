@@ -1,0 +1,26 @@
+server:
+  port: 8002
+
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      #单机版
+      #defaultZone: http://localhost:7001/eureka
+      #集群版
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka
+  instance:
+    prefer-ip-address: true
+    #主机名
+    instance-id: order8002
+spring:
+  application:
+    name: cloud-consumer-order8002
+  # zipkin
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1 #采样率值介于0到1之间，1 则表示全部采集

@@ -1,0 +1,20 @@
+# stream 8801
+
+#新引入的依赖
+    <!--stream rabbitmq-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+    </dependency>
+
+#存在的问题
+#1.重复消费
+#2.持久化
+
+#解决 使用分组group来解决
+
+不同组可以重复消费
+相同组不能重复消费，只能发送给组内的其中一个
+
+持久化就是消费者荡机了，生产者生产消息会在这个期间不被消费，丢失了
+

@@ -1,0 +1,24 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: cloud-consumer-feign-hystrix-order8002
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+
+#设置feign的超时设置（openfeign默认是支持ribbon）
+ribbon:
+  #连接的时间
+  ReadTimeout: 2000
+  #连接成功后处理程序的时间
+  ConnectTimeout: 2000
+#使用hystrix fallback
+feign:
+  hystrix:
+    enabled: true

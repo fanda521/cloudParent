@@ -1,0 +1,21 @@
+#下载zipkin
+#地址：http://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/
+
+ #8001 8002 新加入jar
+        <!-- zipkin -->
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+ yaml:
+    # zipkin
+      zipkin:
+        base-url: http://localhost:9411
+      sleuth:
+        sampler:
+          probability: 1 #采样率值介于0到1之间，1 则表示全部采集
+
+
+

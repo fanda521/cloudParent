@@ -1,0 +1,46 @@
+#添加消息总线rabbitmq 3344
+
+#加入依赖
+    <!--rabbitmq-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+    </dependency>
+#yml 添加
+#rabbitmq相关配置
+rabbitmq:
+  host: localhost
+  port: 5627
+  username: guest
+  password: guest
+#暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#3355 ，3366 添加相应的依赖
+
+    <!--rabbitmq-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+    </dependency>
+#yml 添加
+#rabbitmq相关配置
+rabbitmq:
+  host: localhost
+  port: 5627
+  username: guest
+  password: guest
+
+#测试
+修改git的文件
+需要收到发送一个3344 的刷新
+curl -X POST "http://localhost://3344/actuator/bus-refresh"
+
+#定点通知，精确打击
+公式：http://localhost:配置中心的端口号/actuator/bus-refresh/{destination}
+curl -X POST "http://localhost:3344/actuator/bus-refresh/cloud-config-client:3355"
+

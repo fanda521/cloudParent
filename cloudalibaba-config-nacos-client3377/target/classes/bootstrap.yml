@@ -1,0 +1,23 @@
+#端口
+server:
+  port: 3377
+
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/spring_cloud_test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 331224
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #nacos服务注册中心地址
+      config:
+        server-addr: localhost:8848 #nacos作为配置中心地址
+        file-extension: yaml #指定yaml格式的配置
+        group: DEFAULT_GROUP #指定分组
+        namespace: 1fb6296a-af23-40c7-aed0-e815243be54c #指定spacename

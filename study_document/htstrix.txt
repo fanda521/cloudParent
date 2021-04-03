@@ -1,0 +1,9 @@
+fallback 解耦
+写一个实现@FeignClient 的接口
+然后下面的接口加上fallback = PaymentFallbackService.class
+@FeignClient(value = "CLOUD-PROVIDER-HYSTRIX-PAYMENT8101",fallback = PaymentFallbackService.class)
+
+dashboard
+访问地址：localhost:9001/hystrix
+9001监控HystrixMain8101
+http://localhost:8101/hystrix.stream

@@ -1,0 +1,13 @@
+server:
+  port: 8008
+
+spring:
+  application:
+    name: cloud-provider-consul-payment8008
+
+  cloud:
+    consul:
+      discovery:
+        service-name: cloud-provider-consul-payment
+      host: localhost
+      port: 8500

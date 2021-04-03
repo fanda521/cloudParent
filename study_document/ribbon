@@ -1,0 +1,2 @@
+1.ribbon使用其他的负载规则，不能放在@componentScan的下面
+2.主启动类加上注解@RibbonClient

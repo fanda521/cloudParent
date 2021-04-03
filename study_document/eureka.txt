@@ -1,0 +1,21 @@
+#7001 eureka配置说明
+
+server:
+  port: 7001
+
+eureka:
+  instance:
+    hostname: eureka7001.com
+    prefer-ip-address: true
+    instance-id: eureka-server7001
+  client:
+    register-with-eureka: false #不注册自己
+    fetch-registry: false #不去检索服务
+    service-url:
+      #单机版   服务熔断用单机版
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      #集群版
+      #defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+  server:
+    #eureka的保护机制
+    enable-self-preservation: false

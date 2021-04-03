@@ -1,0 +1,45 @@
+server:
+  port: 8803
+
+spring:
+  application:
+    name: cloud-stream-consumer
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/spring_cloud_test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 331224
+
+  cloud:
+    stream:
+      binders:  #在此处配置要绑定的rabbitmq的服务信息
+        defaultRabbit:
+          type: rabbit #消息组件类型
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: guest
+                password: guest
+
+      bindings: #服务的整合处理
+        input: #这个名字是通道的名称
+          destination: studyExchange #表示要使用的exchange的定义
+          content-type: application/json #设置消息类型，本次为json,文本则设置为“text/plain”
+          binder: defaultRabbit #设置要绑定的消息服务的具体设置
+          group: testA
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      #单机版
+      #defaultZone: http://localhost:7001/eureka
+      #集群版
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: cloud-stream-provider8803

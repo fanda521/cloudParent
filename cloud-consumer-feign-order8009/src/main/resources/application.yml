@@ -1,0 +1,37 @@
+server:
+  port: 8009
+
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      #单机版
+      #defaultZone: http://localhost:7001/eureka
+      #集群版
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka
+  instance:
+    prefer-ip-address: true
+    #主机名
+    instance-id: order8009
+spring:
+  application:
+    name: cloud-consumer-feign-order8009
+
+
+
+
+
+#设置feign的超时设置（openfeign默认是支持ribbon）
+ribbon:
+  #连接的时间
+  ReadTimeout: 5000
+  #连接成功后处理程序的时间
+  ConnectTimeout: 5000
+
+
+
+logging:
+  level:
+    com.wang.springboot.service: debug

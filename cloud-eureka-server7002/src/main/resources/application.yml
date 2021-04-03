@@ -1,0 +1,16 @@
+server:
+  port: 7002
+
+eureka:
+  instance:
+    hostname: cloud-eureka-server7002
+    prefer-ip-address: true
+    instance-id: eureka7002.com
+  client:
+    register-with-eureka: false #不注册自己
+    fetch-registry: false #不去检索服务
+    service-url:
+      #单机版
+      #defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      #集群版
+      defaultZone: http://eureka7003.com:7003/eureka/,http://eureka7001.com:7001/eureka/
