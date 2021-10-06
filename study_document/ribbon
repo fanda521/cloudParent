@@ -1,2 +1,17 @@
 1.ribbon使用其他的负载规则，不能放在@componentScan的下面
 2.主启动类加上注解@RibbonClient
+
+使用的是restTemplate
+
+feign
+需要的接口
+@FeignClient(value = "CLOUD-PAYMENT-SERVICE")
+主启动类
+@EnableFeignClients
+依赖的jar
+<!--openfeign-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+

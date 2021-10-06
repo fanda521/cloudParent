@@ -7,3 +7,14 @@ dashboard
 访问地址：localhost:9001/hystrix
 9001监控HystrixMain8101
 http://localhost:8101/hystrix.stream
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+</dependency>
+主启动类
+@EnableHystrixDashboard
+
+dashboard
+界面一直loading
+是需要走熔断的方法才会出现
