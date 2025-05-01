@@ -25,3 +25,23 @@ namespace: 1fb6296a-af23-40c7-aed0-e815243be54c #指定spacename
 
 
 
+application.yml的优先级小于bootstrap.yml
+所以如果需要指定读取的环境变量的配置文件，需要在bootstrap.yml中指定
+spring:
+  profiles:
+    active: test
+
+如果没有配置    spring.profiles.active 则默认使用没有后缀标识的bootstrap.yml,如果配置了则需在nacos创建
+${prefix}-${spring.profiles.active}.${file-extension} 或者 ${prefix}.${file-extension} 格式的dataid，
+否则项目启动会失败，并且报错如下信息
+Error creating bean with name 'scopedTarget.configClientController':
+Injection of autowired dependencies failed;
+nested exception is java.lang.IllegalArgumentException:
+ Could not resolve placeholder 'config.info' in value "${config.info}"
+
+优先级
+${prefix}-${spring.profiles.active}.${file-extension} >
+${prefix}.${file-extension}
+
+如果动态删除dataid,则会按照优先级更新最新的配置，如果都删除了，则是最后一次的
+
