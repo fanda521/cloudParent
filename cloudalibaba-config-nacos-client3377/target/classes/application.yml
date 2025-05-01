@@ -1,5 +1,6 @@
 spring:
   profiles:
-    active: info
+    active: prod
     # active: test
     # active: dev
+    ## 有bootstrap.yml配置的时候，这个是不管用的，是看bootstrap.yml中的
