@@ -17,9 +17,21 @@ public class ConfigClientController {
     @Value("${config.info}")
     private String configInfo;
 
+    @Value("${config.service-provider.version}")
+    private String serviceProviderVersion;
+
+    @Value("${server.port}")
+    private String serverPort;
+
     @GetMapping("/config/info")
     public String getConfigInfo(){
         return configInfo;
+    }
+
+
+    @GetMapping("/config/service-provider/version")
+    public String getServiceProviderVersion(){
+        return "port:" + serverPort + "  version:" + serviceProviderVersion;
     }
 
 }

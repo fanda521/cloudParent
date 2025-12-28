@@ -16,11 +16,28 @@ public class PaymentController {
     @Value("${server.port}")
     private String serverPort;
 
+
+    @Value("${spring.cloud.nacos.discovery.metadata.version}")
+    private String grayVersion;
+
+    @Value("${spring.cloud.nacos.discovery.metadata.env}")
+    private String grayEnv;
+
+    @Value("${spring.cloud.nacos.discovery.metadata.gray-weight}")
+    private String grayWeight;
+
     @GetMapping("/payment/nacos/{id}")
     public String getPayment(@PathVariable("id") Integer id){
 
         return "nacos registry,serverPosrt:"+serverPort+"\t id:"+id;
     }
 
+
+    @GetMapping("/payment/nacos/gray")
+    public String getPaymentGray(){
+
+        return "nacos registry,serverPosrt:"+serverPort +",grayVersion:" + grayVersion
+                + ",grayEnv:" + grayEnv + ",grayWeight:" + grayWeight;
+    }
 
 }

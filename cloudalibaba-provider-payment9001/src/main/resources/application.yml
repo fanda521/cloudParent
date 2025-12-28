@@ -10,6 +10,12 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848 #配置nacos地址
+        group: DEFAULT_GROUP
+        namespace: a5bdafd9-cde2-44ec-a436-36f156bc5b5b
+        metadata:
+          version: v1.0
+          env: prod
+          gray-weight: 0
 
 
   datasource:
@@ -26,3 +32,4 @@ management:
     web:
       exposure:
         include: '*'
+
