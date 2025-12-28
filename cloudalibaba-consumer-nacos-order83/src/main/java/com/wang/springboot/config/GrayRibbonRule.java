@@ -2,6 +2,8 @@ package com.wang.springboot.config;
 
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractLoadBalancerRule;
+import com.netflix.loadbalancer.BaseLoadBalancer;
+import com.netflix.loadbalancer.ILoadBalancer;
 import com.netflix.loadbalancer.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  * 核心能力：按Nacos元数据version筛选实例、支持prod/gray/all三种灰度策略
  */
 @Slf4j
+@Component
 public class GrayRibbonRule extends AbstractLoadBalancerRule {
 
     // 注入Nacos注册发现客户端（2.1.0.RELEASE 原生支持）
@@ -39,10 +42,20 @@ public class GrayRibbonRule extends AbstractLoadBalancerRule {
      * ✅ Ribbon核心方法：重写负载均衡规则，返回选中的服务实例
      */
     public Server choose(Object key) {
+        ILoadBalancer loadBalancer = getLoadBalancer();
+        if (loadBalancer == null) {
+            return null;
+        }
+        String targetServiceName = null;
+        if (loadBalancer instanceof BaseLoadBalancer) {
+            BaseLoadBalancer baseLB = (BaseLoadBalancer) loadBalancer;
+            targetServiceName =  baseLB.getName(); // ✅ 直接返回服务名，与@FeignClient("xxx")完全一致
+        }
+        System.out.println("✅ Ribbon负载均衡-目标服务名 = " + targetServiceName);
         // 1. 获取目标服务下的所有可用实例（Nacos注册中心）
-        List<ServiceInstance> allInstances = discoveryClient.getInstances(TARGET_SERVICE_ID);
+        List<ServiceInstance> allInstances = discoveryClient.getInstances(targetServiceName);
         if (allInstances == null || allInstances.isEmpty()) {
-            log.error("【灰度规则】服务{}无可用实例！", TARGET_SERVICE_ID);
+            log.error("【灰度规则】服务{}无可用实例！", targetServiceName);
             return null;
         }
 

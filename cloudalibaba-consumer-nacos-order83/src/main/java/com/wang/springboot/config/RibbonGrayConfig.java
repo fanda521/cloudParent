@@ -14,7 +14,7 @@ public class RibbonGrayConfig {
     /**
      * 将自定义灰度规则注入容器，Ribbon自动识别并替换默认规则
      */
-    @Bean
+    //@Bean
     public IRule grayRule() {
         return new GrayRibbonRule();
     }
