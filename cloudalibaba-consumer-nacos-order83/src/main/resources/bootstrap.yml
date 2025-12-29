@@ -17,6 +17,12 @@ spring:
         group: DEFAULT_GROUP #指定分组
         namespace: a5bdafd9-cde2-44ec-a436-36f156bc5b5b #指定spacename
 
+        # 引入灰度规则
+        extension-configs:
+          - data-id: cloud-gateway.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

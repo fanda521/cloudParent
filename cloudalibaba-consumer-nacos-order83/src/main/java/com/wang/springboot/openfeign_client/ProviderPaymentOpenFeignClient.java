@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @date 2025/12/28 17:12
  */
 @Component
-@FeignClient(value = "NACOS-PAYMENT-PROVIDER")
+@FeignClient(value = "nacos-payment-provider")
 public interface ProviderPaymentOpenFeignClient {
 
     @GetMapping("/payment/nacos/gray")

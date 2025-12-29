@@ -1,6 +1,5 @@
 package com.wang.springboot;
 
-import com.wang.springboot.config.RibbonGrayConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -16,7 +15,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 // ✅ 仅对service-provider服务应用灰度规则，精准隔离
-@RibbonClient(name = "NACOS-PAYMENT-PROVIDER", configuration = RibbonGrayConfig.class)
 public class OrderConsumerMain83 {
     public static void main(String[] args) {
         SpringApplication.run(OrderConsumerMain83.class,args);
