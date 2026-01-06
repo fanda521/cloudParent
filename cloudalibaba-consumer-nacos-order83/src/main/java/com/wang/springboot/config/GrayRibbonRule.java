@@ -11,8 +11,12 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +41,15 @@ public class GrayRibbonRule extends AbstractLoadBalancerRule {
 
     // 轮询索引（保证负载均衡均匀性，线程安全）
     private int currentIndex = 0;
+
+    // 计数器：记录当前调用次数
+    private int callCount = 0;
+
+    // 调用周期（默认10次）
+    private int periodCount = 10;
+
+    // 计数器：记录目标版本已调用次数
+    private int targetVersionCount = 0;
 
     /**
      * ✅ Ribbon核心方法：重写负载均衡规则，返回选中的服务实例
@@ -73,20 +86,84 @@ public class GrayRibbonRule extends AbstractLoadBalancerRule {
         return new Server(selectedInstance.getHost(), selectedInstance.getPort());
     }
 
-    /**
-     * ✅ 核心逻辑：按灰度版本筛选实例（prod/gray/all）
-     */
+//    /**
+//     * ✅ 核心逻辑：按灰度版本筛选实例（prod/gray/all）
+//     */
+//    private List<ServiceInstance> filterServiceInstance(List<ServiceInstance> allInstances) {
+//        String targetVersion = grayRuleConfig.getVersion();
+//        // 策略1：all → 返回全部实例，走全量负载均衡
+//        if ("all".equalsIgnoreCase(targetVersion)) {
+//            return allInstances;
+//        }
+//        // 策略2：prod/gray → 精准匹配Nacos实例元数据的version字段
+//        return allInstances.stream()
+//                .filter(instance -> targetVersion.equals(instance.getMetadata().get("version")))
+//                .collect(Collectors.toList());
+//    }
+
+
     private List<ServiceInstance> filterServiceInstance(List<ServiceInstance> allInstances) {
+        List<ServiceInstance> resultInstances = allInstances;
         String targetVersion = grayRuleConfig.getVersion();
-        // 策略1：all → 返回全部实例，走全量负载均衡
-        if ("all".equalsIgnoreCase(targetVersion)) {
-            return allInstances;
+        BigDecimal rate = grayRuleConfig.getRate();
+        int grayCount = rate.multiply(BigDecimal.valueOf(10), MathContext.UNLIMITED).intValue();
+
+        // 如果没有设置比率或者为null，使用原有的逻辑
+        if (rate == null || "all".equalsIgnoreCase(targetVersion)) {
+            return resultInstances;
         }
-        // 策略2：prod/gray → 精准匹配Nacos实例元数据的version字段
-        return allInstances.stream()
+
+        // 分离目标版本和其他版本的实例
+        List<ServiceInstance> targetInstances = allInstances.stream()
                 .filter(instance -> targetVersion.equals(instance.getMetadata().get("version")))
                 .collect(Collectors.toList());
+
+        List<ServiceInstance> otherInstances = allInstances.stream()
+                .filter(instance -> !targetVersion.equals(instance.getMetadata().get("version")))
+                .collect(Collectors.toList());
+
+        if (targetInstances.isEmpty() && otherInstances.isEmpty()) {
+            return resultInstances;
+        }
+
+        if (targetInstances.isEmpty()) {
+            return otherInstances;
+        }
+
+        if (otherInstances.isEmpty()) {
+            return targetInstances;
+        }
+
+        // 同步块确保线程安全
+        synchronized (this) {
+            if (targetVersionCount < grayCount) {
+                // 计算每轮的总调用次数和目标调用次数
+                double random = Math.random();
+                if (random <= rate.doubleValue()) {
+                    targetVersionCount++;
+                    resultInstances = targetInstances;
+                } else {
+                    if (callCount - targetVersionCount < periodCount - grayCount){
+                        resultInstances = otherInstances;
+                    } else {
+                        targetVersionCount++;
+                        resultInstances = targetInstances;
+                    }
+                }
+            } else {
+                resultInstances = otherInstances;
+            }
+            callCount++;
+            if (callCount >= periodCount) {
+                callCount = 0;
+                targetVersionCount = 0;
+            }
+            return resultInstances;
+        }
     }
+
+
+
 
     /**
      * ✅ 轮询负载均衡算法（线程安全，适配2.1.0同步调用）

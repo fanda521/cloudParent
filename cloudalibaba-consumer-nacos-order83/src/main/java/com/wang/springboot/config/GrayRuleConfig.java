@@ -5,6 +5,8 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @RefreshScope // ✅ 开启配置动态刷新（核心注解）
 public class GrayRuleConfig {
@@ -12,12 +14,25 @@ public class GrayRuleConfig {
     @Value("${config.service-provider.version}")
     private String version;
 
+    // 对应Nacos配置中的 service-provider.rate
+    @Value("${config.service-provider.rate}")
+    private BigDecimal rate;
+
 
     // getter/setter 必须
     public String getVersion() {
         return version;
     }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 }
